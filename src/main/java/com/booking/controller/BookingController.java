@@ -15,15 +15,19 @@ public class BookingController {
     @Autowired
     private BookingService bookingService;
 
-    @PostMapping
-    public ResponseEntity<Booking> createBooking(@RequestBody Booking booking) {
-        Booking createdBooking = bookingService.createBooking(booking);
+    @PostMapping("/{carId}/{username}")
+    public ResponseEntity<Booking> createBooking(
+            @PathVariable UUID carId,
+            @PathVariable String username,
+            @RequestBody Booking booking
+    ) {
+        Booking createdBooking = bookingService.createBooking(carId, booking, username);
         return ResponseEntity.ok(createdBooking);
     }
 
-    @GetMapping("/{bookingId}")
-    public ResponseEntity<Booking> getBookingByNo(@PathVariable UUID bookingId) {
-        Optional<Booking> booking = bookingService.getBookingById(bookingId);
+    @GetMapping("/{bookingCode}")
+    public ResponseEntity<Booking> getBookingByCode(@PathVariable String bookingCode) {
+        Optional<Booking> booking = bookingService.getBookingByCode(bookingCode);
         return booking.map(ResponseEntity::ok).orElse(ResponseEntity.notFound().build());
     }
 }
